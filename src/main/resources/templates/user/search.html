@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}"
+>
+<head>
+  <title>Search Contacts</title>
+</head>
+<body>
+<div id="content">
+
+  <div th:if="${loggedInUser != null}">
+    <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+  </div>
+
+  <div class="sm:pl-64 pt-20" style="height: 1000px">
+    <div class="flex justify-center flex-col items-center">
+      <h1 class="text-5xl">Search Results</h1>
+
+      <!-- FIX -->
+      <p data-th-text="${pageContact != null ? pageContact.totalElements : 0} + ' results found'"></p>
+    </div>
+
+    <div class="contacts_container p-5">
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+        <form
+                data-th-object="${contactSearchForm}"
+                data-th-action="@{'/user/contacts/search'}"
+        >
+          <div class="flex space-x-3 p-5 items-center justify-start flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+
+            <div>
+              <select
+                      data-th-field="*{field}"
+                      name="field"
+                      id="countries_disabled"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg">
+
+                <option value="">Select Field</option>
+                <option value="name">Name</option>
+                <option value="phoneNumber">Phone</option> <!-- FIX -->
+                <option value="email">Email</option>
+              </select>
+            </div>
+
+            <!-- FIX -->
+            <label for="table-search-users" class="sr-only">Search</label>
+
+            <div class="relative">
+              <input
+                      data-th-field="*{value}"
+                      type="text"
+                      id="table-search-users"
+                      class="block p-2 ps-10 text-sm border rounded-lg w-80"
+                      placeholder="Search for users"
+              />
+            </div>
+
+            <button type="submit" class="px-3 py-2 bg-gray-800 text-white rounded">
+              Search
+            </button>
+
+          </div>
+        </form>
+
+        <!-- TABLE -->
+        <table
+                data-th-if="${pageContact != null and pageContact.totalElements > 0}"
+                class="w-full text-sm text-left text-gray-500">
+
+          <thead>
+          <tr>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Phone</th>
+            <th class="px-6 py-3">Links</th>
+            <th class="px-6 py-3">Action</th>
+          </tr>
+          </thead>
+
+          <tbody>
+
+          <!-- FIX -->
+          <tr
+                  data-th-each="c : ${pageContact.getContent()}"
+                  class="bg-white border-b hover:bg-gray-50">
+
+            <th class="flex items-center px-6 py-4">
+
+              <!-- FIX -->
+              <img
+                      data-th-src="${c.picture}"
+                      src="#"
+                      alt="profile image"
+                      class="w-10 h-10 rounded-full"
+                      onerror="this.src='https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png'"
+              />
+
+              <div class="ps-3">
+                <div class="font-semibold" data-th-text="${c.name}">Name</div>
+                <div data-th-text="${c.email}">Email</div>
+              </div>
+
+            </th>
+
+            <td>
+              <span data-th-text="${c.phoneNumber}"></span>
+            </td>
+
+            <td>
+              <div class="flex items-center">
+
+                <!-- FIX -->
+                <div data-th-if="${c.favorite}" class="h-2 w-2 bg-green-500"></div>
+
+                <a data-th-href="${c.websiteLink}" target="_blank">🌐</a>
+                <a data-th-href="${c.linkedInLink}" target="_blank">🔗</a>
+
+              </div>
+            </td>
+
+            <td>
+
+              <!-- FIX -->
+              <button th:onclick="'loadContactdata(' + ${c.id} + ')'">
+                👁
+              </button>
+
+            </td>
+
+          </tr>
+
+          </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <div
+                data-th-if="${pageContact != null and pageContact.totalElements > 0}"
+                class="pagination_container p-5 text-center">
+
+          <ul class="inline-flex">
+
+            <li data-th-unless="${pageContact.first}">
+              <a data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${pageContact.number-1}}">Prev</a>
+            </li>
+
+            <li data-th-each="index : ${#numbers.sequence(0,pageContact.totalPages-1)}">
+              <a data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${index}}">
+                <span data-th-text="${index+1}"></span>
+              </a>
+            </li>
+
+            <li data-th-unless="${pageContact.last}">
+              <a data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${pageContact.number+1}}">Next</a>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- NO RESULT -->
+        <h1
+                data-th-if="${pageContact == null or pageContact.totalElements <= 0}"
+                class="text-5xl text-center p-4">
+          No result found
+        </h1>
+
+      </div>
+    </div>
+
+    <div data-th-replace="~{user/contact_modals :: contact}"></div>
+
+  </div>
+</div>
+
+<script data-th-src="@{'/js/contacts.js'}"></script>
+
+<script>
+  console.log("this is profile page");
+</script>
+</body>
+</html>

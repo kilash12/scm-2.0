@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}"
+>
+<head>
+  <title>Update Contact</title>
+</head>
+<body>
+<div id="content">
+
+  <div th:if="${loggedInUser != null}">
+    <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+  </div>
+
+  <div class="sm:pl-64 pt-20" style="height: 1000px">
+    <div class="grid grid-cols-12">
+      <div class="col-span-3"></div>
+      <div class="col-span-12 md:col-span-6">
+
+        <div class="card block p-6 bg-white border rounded-lg shadow">
+
+          <div data-th-replace="message::messagebox"></div>
+
+          <h1 class="text-2xl font-semibold">Update Contact</h1>
+
+          <!-- FIX -->
+          <form
+                  class="mt-8"
+                  data-th-action="@{/user/contacts/update/{id}(id=${contactId})}"
+                  data-th-object="${contactForm}"
+                  method="post"
+                  enctype="multipart/form-data"
+          >
+
+            <!-- name -->
+            <div class="mb-3">
+              <label for="name" class="block mb-2 text-sm">Contact Name</label>
+
+              <input id="name"
+                     data-th-field="*{name}"
+                     type="text"
+                     class="block w-full p-2 border rounded"
+                     placeholder="name"
+              />
+
+              <p data-th-if="${#fields.hasErrors('name')}" data-th-errors="*{name}"></p>
+            </div>
+
+            <!-- email -->
+            <div class="mb-3">
+              <label for="email" class="block mb-2 text-sm">Contact Email</label>
+
+              <input id="email"
+                     data-th-field="*{email}"
+                     type="text"
+                     class="block w-full p-2 border rounded"
+                     placeholder="example@gmail.com"
+              />
+
+              <p data-th-if="${#fields.hasErrors('email')}" data-th-errors="*{email}"></p>
+            </div>
+
+            <!-- phone -->
+            <div class="mb-3">
+              <label for="phone" class="block mb-2 text-sm">Contact Phone</label>
+
+              <input id="phone"
+                     data-th-field="*{phoneNumber}"
+                     type="text"
+                     class="block w-full p-2 border rounded"
+              />
+
+              <p data-th-if="${#fields.hasErrors('phoneNumber')}" data-th-errors="*{phoneNumber}"></p>
+            </div>
+
+            <!-- address -->
+            <div class="mb-3">
+              <label for="address" class="block mb-2 text-sm">Contact Address</label>
+
+              <textarea id="address"
+                        data-th-field="*{address}"
+                        rows="4"
+                        class="block w-full p-2 border rounded"></textarea>
+            </div>
+
+            <!-- description -->
+            <div class="mb-3">
+              <label for="description" class="block mb-2 text-sm">Contact Description</label>
+
+              <textarea id="description"
+                        data-th-field="*{description}"
+                        rows="4"
+                        class="block w-full p-2 border rounded"></textarea>
+            </div>
+
+            <!-- links -->
+            <div class="flex space-x-3 mb-3">
+
+              <input id="website"
+                     data-th-field="*{websiteLink}"
+                     class="block w-full p-2 border rounded"
+                     placeholder="https://example.com"
+              />
+
+              <input id="linkedin"
+                     data-th-field="*{linkedInLink}"
+                     class="block w-full p-2 border rounded"
+                     placeholder="https://linkedin.com"
+              />
+
+            </div>
+
+            <!-- image -->
+            <div class="mb-3">
+              <label for="image_file_input" class="block mb-2 text-sm">Contact Image</label>
+
+              <input id="image_file_input"
+                     data-th-field="*{contactImage}"
+                     type="file"
+                     class="block w-full border rounded"
+              />
+
+              <!-- FIX -->
+              <img
+                      data-th-src="${contactForm.picture}"
+                      src="#"
+                      class="max-h-52 mx-auto rounded-lg shadow m-3"
+                      alt="contact image"
+              />
+            </div>
+
+            <!-- favorite -->
+            <div class="flex items-center mb-3">
+
+              <input id="favorite"
+                     data-th-field="*{favorite}"
+                     type="checkbox"
+              />
+
+              <label for="favorite">Is this contact is your favorite one ?</label>
+            </div>
+
+            <div class="text-center">
+              <button type="submit">Update Contact</button>
+              <button type="reset">Reset</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-th-src="@{'/js/admin.js'}"></script>
+
+<script>
+  console.log("this is profile page");
+</script>
+
+</body>
+</html>
