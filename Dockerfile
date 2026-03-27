@@ -1,10 +1,9 @@
-
-FROM openjdk:21-jdk-slim
+FROM openjdk:21
 
 WORKDIR /app
 
-COPY target/scm-2.0-0.0.1-SNAPSHOT.jar app.jar
+COPY dist/scm2.0-0.0.1-SNAPSHOT.jar /app/scm2.0-0.0.1-SNAPSHOT.jar
 
-EXPOSE 8081
+EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "scm2.0-0.0.1-SNAPSHOT.jar"]
